@@ -313,17 +313,17 @@ k = 3
 
 ### Interpretasi
 
-**Cluster 0**
+Cluster 0 – Provinsi dengan Akses dan Fasilitas Pendidikan Relatif Baik
 
-Provinsi dengan nilai APK, APM, dan rasio laboratorium relatif tinggi sehingga menunjukkan akses pendidikan dan fasilitas yang lebih baik.
+Cluster 0 terdiri atas provinsi-provinsi yang memiliki nilai Angka Partisipasi Kasar (APK), Angka Partisipasi Murni (APM), serta rasio laboratorium yang relatif lebih tinggi dibandingkan cluster lainnya. Karakteristik tersebut menunjukkan bahwa provinsi dalam kelompok ini memiliki tingkat partisipasi pendidikan yang baik dan didukung oleh ketersediaan fasilitas pendidikan yang lebih memadai.
 
-**Cluster 1**
+Cluster 1 – Provinsi dengan Karakteristik Pendidikan Menengah
 
-Merupakan kelompok terbesar dengan karakteristik indikator yang relatif sedang dan mewakili mayoritas provinsi di Indonesia.
+Cluster 1 merupakan kelompok dengan jumlah anggota terbanyak dan mencakup sebagian besar provinsi di Indonesia. Provinsi pada cluster ini memiliki nilai indikator pendidikan yang cenderung berada pada tingkat menengah, baik dari sisi partisipasi pendidikan maupun ketersediaan sumber daya pendidikan. Kelompok ini merepresentasikan kondisi pemerataan pendidikan yang relatif stabil, namun masih memiliki peluang untuk ditingkatkan.
 
-**Cluster 2**
+Cluster 2 – Provinsi dengan Tantangan Pemerataan Pendidikan
 
-Terdiri atas Papua Tengah dan Papua Pegunungan yang memiliki indikator akses pendidikan dan fasilitas relatif lebih rendah dibandingkan cluster lainnya.
+Cluster 2 terdiri atas Papua Tengah dan Papua Pegunungan, yang memiliki nilai APK, APM, dan rasio laboratorium relatif lebih rendah dibandingkan cluster lainnya. Karakteristik tersebut menunjukkan masih adanya tantangan dalam pemerataan akses pendidikan dan penyediaan fasilitas pendukung pembelajaran, sehingga wilayah dalam cluster ini memerlukan perhatian dan kebijakan yang lebih terarah untuk meningkatkan kualitas layanan pendidikan.
 
 ---
 
