@@ -94,7 +94,25 @@ Penelitian memanfaatkan enam dataset pendidikan yang diperoleh dari sumber resmi
 | Laboratorium SD  | Kondisi Laboratorium IPA SD Menurut Kabupaten/Kota Tahun 2024             |
 | Laboratorium SMP | Kondisi Laboratorium IPA SMP Menurut Kabupaten/Kota Tahun 2024            |
 
+## 📊 Ringkasan Dataset
+
+Penelitian ini memanfaatkan **enam dataset pendidikan** yang berasal dari sumber resmi pemerintah Indonesia. Setiap dataset memiliki struktur, tingkat granularitas, dan jumlah atribut yang berbeda sehingga diperlukan proses *data cleaning*, seleksi atribut, serta integrasi menggunakan **Apache Spark** sebelum dilakukan analisis.
+
+| Dataset                                                               | Jumlah Data | Jumlah Atribut Asli | Atribut yang Digunakan                                                  |
+| --------------------------------------------------------------------- | ----------: | ------------------: | ----------------------------------------------------------------------- |
+| Angka Partisipasi Kasar (APK) Menurut Provinsi dan Jenjang Pendidikan |    40 baris |                   4 | `provinsi`, `apk_sd`, `apk_smp`                                         |
+| Angka Partisipasi Murni (APM) Menurut Provinsi dan Jenjang Pendidikan |    40 baris |                   4 | `provinsi`, `apm_sd`, `apm_smp`                                         |
+| Jumlah Sekolah, Guru, dan Murid SD Menurut Provinsi                   |    39 baris |                   7 | `provinsi`, `jumlah_sekolah_sd`, `jumlah_guru_sd`, `jumlah_murid_sd`    |
+| Jumlah Sekolah, Guru, dan Murid SMP Menurut Provinsi                  |    39 baris |                   7 | `provinsi`, `jumlah_sekolah_smp`, `jumlah_guru_smp`, `jumlah_murid_smp` |
+| Kondisi Laboratorium IPA SD Menurut Kabupaten/Kota Tahun 2024         |   514 baris |                   4 | `provinsi`, `jumlah_laboratorium_sd`                                    |
+| Kondisi Laboratorium IPA SMP Menurut Kabupaten/Kota Tahun 2024        |   514 baris |                   4 | `provinsi`, `jumlah_laboratorium_smp`                                   |
+
+Dataset **APK** dan **APM** digunakan sebagai indikator partisipasi pendidikan, sedangkan dataset **SD** dan **SMP** digunakan untuk memperoleh informasi jumlah sekolah, guru, dan murid pada masing-masing jenjang pendidikan. Sementara itu, dataset **laboratorium IPA SD** dan **laboratorium IPA SMP** pada awalnya memiliki unit analisis pada tingkat **kabupaten/kota**, sehingga dilakukan proses agregasi berdasarkan atribut **provinsi** menggunakan Apache Spark agar dapat diintegrasikan dengan dataset lainnya.
+
+Setelah melalui proses *data cleaning*, standardisasi, agregasi, dan integrasi, diperoleh **Silver Layer** yang terdiri atas **38 observasi (provinsi)** dan **15 atribut**. Selanjutnya dilakukan proses *feature engineering* untuk membentuk **Gold Layer** dengan **38 observasi** dan **8 variabel analisis**, yang kemudian digunakan sebagai input pada tahap **StandardScaler**, **Principal Component Analysis (PCA)**, dan **K-Means Clustering**.
+
 ---
+
 
 # ⚙️ Tahapan Implementasi
 
