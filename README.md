@@ -1,1 +1,394 @@
-# KELOMPOK-17-SGD-4-TUGAS-BESAR-ABD-RB
+# 🎓 Implementasi Big Data Ecosystem untuk Analisis Pemerataan Pendidikan di Indonesia Menggunakan Apache Spark
+
+> **Big Data | Apache Spark | ETL Pipeline | Feature Engineering | PCA | K-Means Clustering**
+
+---
+
+# 📖 Deskripsi Proyek
+
+Pemerataan pendidikan merupakan salah satu indikator penting dalam pembangunan sumber daya manusia di Indonesia. Namun, data yang digunakan untuk mengevaluasi kondisi pendidikan umumnya tersebar pada berbagai sumber dengan struktur dan karakteristik yang berbeda sehingga memerlukan proses integrasi dan transformasi sebelum dapat dianalisis.
+
+Proyek ini mengimplementasikan **Big Data Ecosystem berbasis Apache Spark** untuk membangun sebuah *pipeline* pengolahan data pendidikan yang terdiri atas **Bronze Layer**, **Silver Layer**, dan **Gold Layer**. Melalui proses **Extract, Transform, Load (ETL)**, data dari berbagai sumber dibersihkan, diintegrasikan, dan ditransformasikan menjadi dataset analisis yang siap digunakan untuk proses *machine learning*.
+
+Tahap analisis dilakukan menggunakan **Principal Component Analysis (PCA)** untuk reduksi dimensi dan **K-Means Clustering** untuk mengelompokkan provinsi berdasarkan karakteristik pemerataan pendidikan.
+
+---
+
+# 🎯 Tujuan
+
+Implementasi ini bertujuan untuk:
+
+* Membangun ekosistem Big Data menggunakan Apache Spark.
+* Mengintegrasikan berbagai dataset pendidikan menjadi satu dataset terpusat.
+* Melakukan proses ETL secara terstruktur melalui arsitektur Bronze–Silver–Gold.
+* Membentuk fitur baru (*feature engineering*) untuk menghasilkan indikator yang lebih representatif.
+* Mengidentifikasi pola pemerataan pendidikan menggunakan K-Means Clustering.
+* Mengevaluasi kualitas clustering menggunakan Silhouette Score.
+
+---
+
+# 🏛️ Arsitektur Pipeline
+
+```text
+                    RAW DATASET
+
+        APK ───────────────┐
+        APM ───────────────┤
+        Data SD ───────────┤
+        Data SMP ──────────┤
+        Lab SD ────────────┤
+        Lab SMP ───────────┘
+                  │
+                  ▼
+        ┌──────────────────────┐
+        │     Bronze Layer     │
+        │    (Raw Dataset)     │
+        └──────────────────────┘
+                  │
+                  ▼
+        Data Cleaning
+        Data Validation
+        Standardization
+        Data Aggregation
+                  │
+                  ▼
+        ┌──────────────────────┐
+        │     Silver Layer     │
+        │ Integrated Dataset   │
+        └──────────────────────┘
+                  │
+                  ▼
+        Feature Engineering
+                  │
+                  ▼
+        ┌──────────────────────┐
+        │      Gold Layer      │
+        │  Analysis Dataset    │
+        └──────────────────────┘
+                  │
+                  ▼
+          StandardScaler
+                  │
+                  ▼
+ Principal Component Analysis
+                  │
+                  ▼
+        K-Means Clustering
+                  │
+                  ▼
+      Cluster Interpretation
+```
+
+---
+
+# 📂 Dataset
+
+Penelitian memanfaatkan enam dataset pendidikan yang diperoleh dari sumber resmi pemerintah.
+
+| Dataset          | Deskripsi                                                                 |
+| ---------------- | ------------------------------------------------------------------------- |
+| APK              | Angka Partisipasi Kasar Menurut Provinsi dan Jenjang Pendidikan           |
+| APM              | Angka Partisipasi Murni Menurut Provinsi dan Jenjang Pendidikan           |
+| Data SD          | Jumlah Sekolah, Guru, dan Murid Sekolah Dasar Menurut Provinsi            |
+| Data SMP         | Jumlah Sekolah, Guru, dan Murid Sekolah Menengah Pertama Menurut Provinsi |
+| Laboratorium SD  | Kondisi Laboratorium IPA SD Menurut Kabupaten/Kota Tahun 2024             |
+| Laboratorium SMP | Kondisi Laboratorium IPA SMP Menurut Kabupaten/Kota Tahun 2024            |
+
+---
+
+# ⚙️ Tahapan Implementasi
+
+## 1. Bronze Layer
+
+Bronze Layer merupakan tahap awal dalam pipeline Big Data yang berfungsi sebagai tempat penyimpanan data mentah (*raw data*).
+
+Pada tahap ini seluruh dataset dibaca menggunakan **Apache Spark** dan dimuat ke dalam **Spark DataFrame** tanpa mengubah struktur maupun isi data.
+
+### Aktivitas
+
+* Import dataset CSV
+* Membuat Spark DataFrame
+* Menyimpan raw dataset
+
+### Output
+
+```
+bronze/
+├── apk.csv
+├── apm.csv
+├── sd.csv
+├── smp.csv
+├── lab_sd.csv
+└── lab_smp.csv
+```
+
+---
+
+## 2. Data Cleaning
+
+Tahap *data cleaning* dilakukan untuk meningkatkan kualitas data sebelum proses integrasi.
+
+### APK
+
+* Menghapus metadata
+* Standardisasi nama provinsi
+* Konversi tipe data numerik
+
+### APM
+
+* Menghapus metadata
+* Standardisasi nama provinsi
+* Konversi tipe data numerik
+
+### Data SD
+
+* Menghapus data agregat Indonesia
+* Standardisasi nama provinsi
+* Seleksi atribut
+
+### Data SMP
+
+* Menghapus data agregat Indonesia
+* Standardisasi nama provinsi
+* Seleksi atribut
+
+### Laboratorium SD
+
+* Filtering data
+* Agregasi berdasarkan provinsi
+
+### Laboratorium SMP
+
+* Filtering data
+* Agregasi berdasarkan provinsi
+
+### Output
+
+```
+apk_clean
+apm_clean
+sd_clean
+smp_clean
+lab_sd_clean
+lab_smp_clean
+```
+
+---
+
+## 3. Silver Layer
+
+Dataset hasil *cleaning* kemudian diintegrasikan berdasarkan atribut **provinsi** menggunakan operasi **join** pada Apache Spark.
+
+Tahap ini menghasilkan satu dataset terpusat yang memuat seluruh indikator pendidikan.
+
+### Hasil
+
+| Keterangan       | Nilai |
+| ---------------- | ----: |
+| Jumlah observasi |    38 |
+| Jumlah atribut   |    15 |
+
+### Output
+
+```
+silver_master.csv
+```
+
+---
+
+## 4. Feature Engineering (Gold Layer)
+
+Tahap ini bertujuan menghasilkan indikator yang lebih representatif dibandingkan data absolut.
+
+Empat fitur baru dibentuk:
+
+| Fitur                  | Rumus                          |
+| ---------------------- | ------------------------------ |
+| Rasio Guru SD          | Murid SD ÷ Guru SD             |
+| Rasio Guru SMP         | Murid SMP ÷ Guru SMP           |
+| Rasio Laboratorium SD  | Laboratorium SD ÷ Sekolah SD   |
+| Rasio Laboratorium SMP | Laboratorium SMP ÷ Sekolah SMP |
+
+Keempat fitur tersebut dikombinasikan dengan:
+
+* APK SD
+* APK SMP
+* APM SD
+* APM SMP
+
+sehingga menghasilkan dataset analisis dengan total **8 variabel**.
+
+### Hasil
+
+| Keterangan       | Nilai |
+| ---------------- | ----: |
+| Jumlah observasi |    38 |
+| Jumlah variabel  |     8 |
+
+### Output
+
+```
+gold_pendidikan.csv
+```
+
+---
+
+## 5. Standardisasi Data
+
+Karena setiap variabel memiliki satuan yang berbeda, dilakukan standardisasi menggunakan **StandardScaler**.
+
+### Tujuan
+
+* Menyamakan skala fitur
+* Menghindari dominasi variabel tertentu
+* Meningkatkan kualitas clustering
+
+### Output
+
+```
+scaled_features
+```
+
+---
+
+## 6. Principal Component Analysis (PCA)
+
+PCA digunakan untuk mereduksi dimensi data tanpa kehilangan sebagian besar informasi.
+
+### Hasil Explained Variance
+
+| Komponen | Persentase |
+| -------- | ---------: |
+| PC1      |     49.26% |
+| PC2      |     29.90% |
+| PC3      |      8.77% |
+
+Total informasi yang dipertahankan:
+
+> **87.93%**
+
+### Output
+
+```
+pca_features
+```
+
+---
+
+## 7. K-Means Clustering
+
+Dataset hasil PCA digunakan sebagai input algoritma K-Means.
+
+### Parameter
+
+```
+k = 3
+```
+
+### Distribusi Cluster
+
+| Cluster   | Jumlah Provinsi |
+| --------- | --------------: |
+| Cluster 0 |              10 |
+| Cluster 1 |              26 |
+| Cluster 2 |               2 |
+
+### Interpretasi
+
+**Cluster 0**
+
+Provinsi dengan nilai APK, APM, dan rasio laboratorium relatif tinggi sehingga menunjukkan akses pendidikan dan fasilitas yang lebih baik.
+
+**Cluster 1**
+
+Merupakan kelompok terbesar dengan karakteristik indikator yang relatif sedang dan mewakili mayoritas provinsi di Indonesia.
+
+**Cluster 2**
+
+Terdiri atas Papua Tengah dan Papua Pegunungan yang memiliki indikator akses pendidikan dan fasilitas relatif lebih rendah dibandingkan cluster lainnya.
+
+---
+
+## 8. Evaluasi Model
+
+Kualitas clustering dievaluasi menggunakan **Silhouette Score**.
+
+### Hasil
+
+| Metrik           |      Nilai |
+| ---------------- | ---------: |
+| Silhouette Score | **0.6100** |
+
+Nilai tersebut menunjukkan bahwa cluster yang terbentuk memiliki tingkat pemisahan (*separation*) dan kekompakan (*cohesion*) yang cukup baik.
+
+---
+
+# 📁 Struktur Repository
+
+```
+project/
+│
+├── data/
+│   ├── bronze/
+│   ├── silver/
+│   └── gold/
+│
+├── notebooks/
+│
+├── scripts/
+│
+├── output/
+│
+├── docker-compose.yml
+│
+└── README.md
+```
+
+---
+
+# 🚀 Cara Menjalankan
+
+1. Jalankan Docker.
+2. Buat Spark Session menggunakan PySpark.
+3. Import seluruh dataset ke Bronze Layer.
+4. Jalankan proses *data cleaning*.
+5. Integrasikan data menjadi Silver Layer.
+6. Lakukan *feature engineering* untuk membentuk Gold Layer.
+7. Terapkan StandardScaler.
+8. Jalankan PCA.
+9. Jalankan K-Means Clustering.
+10. Evaluasi hasil menggunakan Silhouette Score.
+
+---
+
+# 📊 Ringkasan Hasil
+
+| Tahapan      | Hasil                                        |
+| ------------ | -------------------------------------------- |
+| Bronze Layer | 6 dataset mentah                             |
+| Silver Layer | 38 observasi, 15 atribut                     |
+| Gold Layer   | 38 observasi, 8 variabel                     |
+| PCA          | 3 komponen utama (87.93% explained variance) |
+| K-Means      | 3 cluster                                    |
+| Evaluasi     | Silhouette Score = 0.6100                    |
+
+---
+
+# 🛠️ Teknologi
+
+* Apache Spark (PySpark)
+* Docker
+* Python
+* Pandas
+* NumPy
+
+---
+
+# 👥 Tim
+
+* Nurul Izzah Istiqoamah
+* Tesalonika Hutajulu
+* Mia Al Musdari
+* Hanifah Inaya Sani
+
+---
